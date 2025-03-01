@@ -9,25 +9,26 @@ on:
 jobs:
   sonarqube:
     name: SonarQube
-    runs-on: windows-latest  # Usa Linux para evitar problemas
+    runs-on: windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Necesario para un análisis correcto
+          fetch-depth: 0
 
-      - name: Set up JDK 17  # Instala Java 17 (o la versión que uses)
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Compile Java code  # 💡 Añade este paso para compilar Java
+      - name: Compile Java code
         run: |
-          find . -name "*.java" > sources.txt  # Busca los archivos Java
-          if [ -s sources.txt ]; then          # Si hay archivos Java, compila
-            javac -d . @sources.txt
-          fi
+          Get-ChildItem -Path . -Recurse -Filter "*.java" | ForEach-Object { $_.FullName } > sources.txt
+          if (Test-Path sources.txt -and (Get-Content sources.txt).Length -gt 0) {
+            javac -d . (Get-Content sources.txt)
+          }
+        shell: pwsh  # Asegura que usa PowerShell
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
@@ -37,5 +38,3 @@ jobs:
           args: >
             -Dsonar.projectKey=lil0431_practicaMDS
             -Dsonar.java.binaries=.
-
-
