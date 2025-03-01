@@ -36,7 +36,7 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
-            -Dsonar.projectKey=TU_PROYECTO
+            -Dsonar.projectKey=lil0431_practicaMDS
             -Dsonar.java.binaries=.
 
 
