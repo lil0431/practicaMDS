@@ -38,3 +38,6 @@ jobs:
           args: >
             -Dsonar.projectKey=lil0431_practicaMDS
             -Dsonar.java.binaries=.
+            -Dsonar.c.file.suffixes=-
+            -Dsonar.cpp.file.suffixes=-
+            -Dsonar.objc.file.suffixes=-
