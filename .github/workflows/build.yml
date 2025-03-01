@@ -9,7 +9,7 @@ on:
 jobs:
   sonarqube:
     name: SonarQube
-    runs-on: ubuntu-latest  # Usa Linux para evitar problemas
+    runs-on: windows-latest  # Usa Linux para evitar problemas
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,7 +33,6 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
             -Dsonar.projectKey=lil0431_practicaMDS
