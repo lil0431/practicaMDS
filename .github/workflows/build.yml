@@ -5,15 +5,38 @@ on:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
+
 jobs:
   sonarqube:
     name: SonarQube
-    runs-on: windows-latest
+    runs-on: ubuntu-latest  # Usa Linux para evitar problemas
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0  # Necesario para un análisis correcto
+
+      - name: Set up JDK 17  # Instala Java 17 (o la versión que uses)
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Compile Java code  # 💡 Añade este paso para compilar Java
+        run: |
+          find . -name "*.java" > sources.txt  # Busca los archivos Java
+          if [ -s sources.txt ]; then          # Si hay archivos Java, compila
+            javac -d . @sources.txt
+          fi
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=TU_PROYECTO
+            -Dsonar.java.binaries=.
+
+
